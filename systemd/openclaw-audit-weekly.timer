@@ -1,0 +1,9 @@
+[Unit]
+Description=Weekly config audit every Sunday at 04:00 AM
+
+[Timer]
+OnCalendar=Sun *-*-* 04:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

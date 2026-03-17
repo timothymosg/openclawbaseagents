@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Health Monitor - Health check
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent health-monitor -m "Quick Check: Check RAM (free -h), disk (df -h), gateway status (systemctl --user status openclaw-gateway), port 18800 listening, dashboard HTTP 200, all cron timers active. If gateway is down, restart it. Save report to shared-data/health/."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=180

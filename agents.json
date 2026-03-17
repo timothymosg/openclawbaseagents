@@ -1,0 +1,40 @@
+{
+  "_comment": "Add these entries to the 'agents.list' array in ~/.openclaw/openclaw.json",
+  "agents": [
+    {
+      "id": "security-watchdog",
+      "name": "Security Watchdog (安全看门狗)",
+      "model": "openrouter/google/gemini-3-flash-preview",
+      "workspace": "~/.openclaw/workspace-security-watchdog",
+      "agentDir": "~/.openclaw/agents/security-watchdog/agent"
+    },
+    {
+      "id": "health-monitor",
+      "name": "Health Monitor (健康监控)",
+      "model": "openrouter/google/gemini-3.1-flash-lite-preview",
+      "workspace": "~/.openclaw/workspace-health-monitor",
+      "agentDir": "~/.openclaw/agents/health-monitor/agent"
+    },
+    {
+      "id": "memory-curator",
+      "name": "Memory Curator (知识管理员)",
+      "model": "openrouter/google/gemini-3.1-flash-lite-preview",
+      "workspace": "~/.openclaw/workspace-memory-curator",
+      "agentDir": "~/.openclaw/agents/memory-curator/agent"
+    },
+    {
+      "id": "scheduler",
+      "name": "Scheduler (调度员)",
+      "model": "openrouter/google/gemini-3.1-flash-lite-preview",
+      "workspace": "~/.openclaw/workspace-scheduler",
+      "agentDir": "~/.openclaw/agents/scheduler/agent"
+    },
+    {
+      "id": "auditor",
+      "name": "Auditor (审计员)",
+      "model": "openrouter/google/gemini-3-flash-preview",
+      "workspace": "~/.openclaw/workspace-auditor",
+      "agentDir": "~/.openclaw/agents/auditor/agent"
+    }
+  ]
+}

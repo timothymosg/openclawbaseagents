@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Security Watchdog - Daily quick scan
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent security-watchdog -m "Quick Scan: Check fail2ban status (new bans?), ufw status (rules unchanged?), last 50 lines of /var/log/auth.log (failed logins?), ss -tlnp (expected ports only?), who/last -n 10 (unexpected sessions?). Save quick-scan report to shared-data/security/."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=180

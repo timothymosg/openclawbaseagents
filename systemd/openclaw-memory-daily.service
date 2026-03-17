@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Memory Curator - Daily quick tidy
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent memory-curator -m "Quick Tidy: Count daily memory files per agent, flag any with >30 files. Check shared-data/ for new unindexed files. Update INDEX.md. Flag files older than 30 days for archival. Quick cross-pollination scan for CRITICAL/WARNING findings. Save curation report."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=300

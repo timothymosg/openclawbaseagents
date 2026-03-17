@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Security Watchdog - Weekly full audit
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent security-watchdog -m "Full Audit: Run all quick scan checks PLUS review auth.log patterns, audit all fail2ban jails and configs, verify ufw rules match expected state, check for unauthorized systemd services, audit OpenClaw config for exposed secrets, check file permissions on sensitive dirs, review open ports vs expected, verify SSH config (PermitRootLogin, PasswordAuthentication). Save full-audit report to shared-data/security/."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=300

@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Auditor - Weekly config audit
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent auditor -m "Full Audit: Snapshot current system state — hash openclaw.json, count agent dirs (expect 33), list all agents/timers/extensions/skills, hash SSH authorized_keys and ufw rules. Compare to baseline.json. Report all differences. Check file permissions on sensitive files. Verify no credentials in plaintext outside expected locations. Update changelog.md. If this is the first run, create the initial baseline. Save report to shared-data/audit/."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=300

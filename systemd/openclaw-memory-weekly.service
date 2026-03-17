@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenClaw Memory Curator - Weekly full curation
+After=openclaw.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/timosgomk/.npm-global/bin/openclaw agent --agent memory-curator -m "Full Curation: Walk ALL agent workspaces and catalog memory files. For agents with daily files >14 days old: read, extract insights, promote to MEMORY.md, compress into weekly summaries, archive originals. Walk shared-data/ tree, deduplicate, archive files >90 days. Rebuild INDEX.md. Generate memory-health.json. Run cross-pollination. Save full curation report."
+Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=OPENCLAW_NO_RESPAWN=1
+EnvironmentFile=%h/.openclaw/env
+TimeoutStartSec=600
