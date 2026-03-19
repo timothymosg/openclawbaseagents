@@ -1,5 +1,7 @@
 # OpenClaw Base Agents
 
+English | [中文](README.zh-CN.md)
+
 System-level agents for [OpenClaw](https://openclaw.ai) that handle infrastructure monitoring, security, memory management, scheduling, and configuration auditing. Think of them as the ops team that keeps your OpenClaw installation healthy and organized while your domain agents focus on actual work.
 
 ## Agents
@@ -124,6 +126,7 @@ This disables timers, removes agent directories and workspaces. Shared data in `
 ```
 OpenClawBaseAgents/
 ├── README.md
+├── README.zh-CN.md          # Chinese version
 ├── CLAUDE.md               # Project instructions for Claude Code
 ├── agents.json              # Config fragment for openclaw.json
 ├── .gitignore
@@ -135,6 +138,9 @@ OpenClawBaseAgents/
 │   ├── memory-curator/
 │   ├── scheduler/
 │   └── auditor/
+├── shared-data/
+│   └── api-throttle/
+│       └── config.json      # Per-service throttle configuration
 ├── systemd/                 # systemd .timer + .service unit files
 │   ├── openclaw-health-check.*
 │   ├── openclaw-security-daily.*
@@ -144,7 +150,8 @@ OpenClawBaseAgents/
 │   └── openclaw-audit-weekly.*
 └── scripts/
     ├── install.sh           # Deploy to ~/.openclaw/ and enable timers
-    └── uninstall.sh         # Remove agents and disable timers
+    ├── uninstall.sh         # Remove agents and disable timers
+    └── api-throttle.sh      # Human-like rate limiting for external API calls
 ```
 
 ## Development
@@ -174,6 +181,40 @@ It also maintains:
 - `~/.openclaw/shared-data/INDEX.md` — searchable index of all shared knowledge
 - `~/.openclaw/shared-data/curation/memory-health.json` — memory stats per agent
 - Cross-pollination summaries in `shared-data/knowledge/`
+
+## API Throttle
+
+All agents are required to route external API calls through a centralized throttle controller. This prevents bot detection and IP bans by making API call patterns look human.
+
+**How it works:**
+
+```bash
+# Instead of calling APIs directly:
+curl -s https://api.telegram.org/bot$TOKEN/getMe
+
+# Agents use the throttle wrapper:
+~/.openclaw/api-throttle telegram -- curl -s https://api.telegram.org/bot$TOKEN/getMe
+```
+
+**Features:**
+- Random human-like delays (gaussian distribution, not uniform)
+- Per-service burst limits (max N calls per time window)
+- Exponential backoff on errors with jitter
+- Session warmup (longer delay on first call after inactivity)
+- Inter-agent jitter to prevent synchronized requests
+- Full audit log at `~/.openclaw/shared-data/api-throttle/throttle.log`
+
+**Preconfigured services:** `openrouter`, `telegram`, `github`, `resend`, `shopify`, `google`, `generic`
+
+**Tuning:** Edit `~/.openclaw/shared-data/api-throttle/config.json` to adjust delay ranges, burst limits, and backoff settings per service. The install script preserves your existing config if one is already deployed.
+
+**Monitoring:**
+
+```bash
+~/.openclaw/api-throttle --status              # All services
+~/.openclaw/api-throttle --status openrouter   # Single service
+~/.openclaw/api-throttle --reset telegram      # Clear backoff state
+```
 
 ## Security Notes
 
