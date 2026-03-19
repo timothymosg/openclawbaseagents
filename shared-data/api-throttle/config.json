@@ -1,0 +1,81 @@
+{
+  "enabled": true,
+  "description": "API throttle configuration — human-like rate limiting for external API calls",
+
+  "defaults": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 5000,
+    "max_burst": 10,
+    "burst_window_sec": 60,
+    "backoff_base_ms": 5000,
+    "max_backoff_ms": 300000,
+    "warmup_threshold_sec": 300,
+    "warmup_min_ms": 3000,
+    "warmup_max_ms": 8000,
+    "excluded": false
+  },
+
+  "services": {
+    "openrouter": {
+      "description": "OpenRouter LLM API — primary AI provider",
+      "min_delay_ms": 1000,
+      "max_delay_ms": 3000,
+      "max_burst": 15,
+      "burst_window_sec": 60,
+      "backoff_base_ms": 10000,
+      "max_backoff_ms": 600000
+    },
+    "telegram": {
+      "description": "Telegram Bot API — messaging",
+      "min_delay_ms": 2000,
+      "max_delay_ms": 6000,
+      "max_burst": 8,
+      "burst_window_sec": 60,
+      "backoff_base_ms": 5000,
+      "max_backoff_ms": 120000
+    },
+    "github": {
+      "description": "GitHub API — code repository",
+      "min_delay_ms": 1500,
+      "max_delay_ms": 5000,
+      "max_burst": 10,
+      "burst_window_sec": 60,
+      "backoff_base_ms": 8000,
+      "max_backoff_ms": 300000
+    },
+    "resend": {
+      "description": "Resend Email API",
+      "min_delay_ms": 3000,
+      "max_delay_ms": 8000,
+      "max_burst": 5,
+      "burst_window_sec": 120,
+      "backoff_base_ms": 10000,
+      "max_backoff_ms": 300000
+    },
+    "shopify": {
+      "description": "Shopify Admin/Storefront API",
+      "min_delay_ms": 2000,
+      "max_delay_ms": 7000,
+      "max_burst": 8,
+      "burst_window_sec": 60,
+      "backoff_base_ms": 10000,
+      "max_backoff_ms": 300000
+    },
+    "google": {
+      "description": "Google APIs (Search, Analytics, etc.)",
+      "min_delay_ms": 3000,
+      "max_delay_ms": 10000,
+      "max_burst": 5,
+      "burst_window_sec": 60,
+      "backoff_base_ms": 15000,
+      "max_backoff_ms": 600000
+    },
+    "generic": {
+      "description": "Fallback for unlisted external services",
+      "min_delay_ms": 2000,
+      "max_delay_ms": 6000,
+      "max_burst": 8,
+      "burst_window_sec": 60
+    }
+  }
+}

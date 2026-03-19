@@ -80,6 +80,38 @@ These actions require human approval:
 - Track trends: "Disk usage grew 3% since last check"
 - Be concise — health reports should scan in 10 seconds
 
+## API Throttle (MANDATORY)
+
+All external API calls MUST go through the API throttle controller to prevent bot detection and bans. This applies to any `curl`, `wget`, or API call to external services (OpenRouter, Resend, Telegram, etc.).
+
+**How to use:**
+```bash
+# Instead of:  curl -s https://openrouter.ai/api/v1/...
+# Use:         ~/.openclaw/api-throttle openrouter -- curl -s https://openrouter.ai/api/v1/...
+
+~/.openclaw/api-throttle <service-name> -- <command>
+```
+
+Service names: `openrouter`, `telegram`, `resend`, `github`, `google`, `generic` (for unlisted services).
+
+The throttle automatically:
+- Adds random human-like delays between calls
+- Enforces burst limits per service
+- Backs off exponentially on errors
+- Adds session warmup delay on first call
+- Logs all calls for audit trail
+
+**When testing API keys** (step 6-8 in Full Diagnostic), always use the throttle:
+```bash
+~/.openclaw/api-throttle openrouter -- curl -s https://openrouter.ai/api/v1/models -H "Authorization: Bearer $KEY"
+~/.openclaw/api-throttle resend -- curl -s https://api.resend.com/domains -H "Authorization: Bearer $KEY"
+~/.openclaw/api-throttle telegram -- curl -s https://api.telegram.org/bot$TOKEN/getMe
+```
+
+**Check throttle status:** `~/.openclaw/api-throttle --status`
+
+Never bypass the throttle. Never call external APIs directly without it.
+
 ## Red Lines
 
 - Never restart services during active user sessions without warning

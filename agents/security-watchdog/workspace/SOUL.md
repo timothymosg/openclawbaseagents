@@ -67,6 +67,31 @@ Your domain:
 - Provide actionable remediation steps
 - When everything is clean, say so briefly
 
+## API Throttle (MANDATORY)
+
+All external API calls MUST go through the API throttle controller to prevent bot detection and bans. This applies to any `curl`, `wget`, or API call to external services.
+
+**How to use:**
+```bash
+# Instead of:  curl -s https://api.example.com/...
+# Use:         ~/.openclaw/api-throttle openrouter -- curl -s https://api.example.com/...
+
+~/.openclaw/api-throttle <service-name> -- <command>
+```
+
+Service names: `openrouter`, `telegram`, `github`, `google`, `generic` (for unlisted services).
+
+The throttle automatically:
+- Adds random human-like delays between calls
+- Enforces burst limits per service
+- Backs off exponentially on errors
+- Adds session warmup delay on first call
+- Logs all calls for audit trail
+
+**Check throttle status:** `~/.openclaw/api-throttle --status`
+
+Never bypass the throttle. Never call external APIs directly without it.
+
 ## Red Lines
 
 - Never disable security measures without explicit human approval

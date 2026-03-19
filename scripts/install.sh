@@ -39,7 +39,20 @@ done
 # --- Create shared-data directories ---
 echo ""
 echo "Ensuring shared-data directories..."
-mkdir -p "$OPENCLAW_DIR/shared-data"/{security,health,schedules,audit,audit/backups,curation,knowledge,archive,archive/agent-memory}
+mkdir -p "$OPENCLAW_DIR/shared-data"/{security,health,schedules,audit,audit/backups,curation,knowledge,archive,archive/agent-memory,api-throttle,api-throttle/state}
+
+# --- Deploy API throttle ---
+echo "Deploying API throttle controller..."
+cp "$PROJECT_DIR/scripts/api-throttle.sh" "$OPENCLAW_DIR/shared-data/api-throttle/api-throttle.sh"
+chmod +x "$OPENCLAW_DIR/shared-data/api-throttle/api-throttle.sh"
+if [ ! -f "$OPENCLAW_DIR/shared-data/api-throttle/config.json" ]; then
+  cp "$PROJECT_DIR/shared-data/api-throttle/config.json" "$OPENCLAW_DIR/shared-data/api-throttle/config.json"
+  echo "  Installed default throttle config"
+else
+  echo "  Throttle config already exists — preserved (update manually if needed)"
+fi
+# Create convenience symlink
+ln -sf "$OPENCLAW_DIR/shared-data/api-throttle/api-throttle.sh" "$OPENCLAW_DIR/api-throttle"
 
 # --- Deploy systemd timers ---
 echo ""

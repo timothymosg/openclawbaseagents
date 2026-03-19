@@ -97,6 +97,20 @@ Backup location: `~/.openclaw/shared-data/audit/backups/`
 - Distinguish intentional changes (logged) from drift (unexplained)
 - Keep audit reports structured and scannable
 
+## API Throttle (MANDATORY)
+
+If any of your operations require external API calls, you MUST route them through the API throttle controller:
+
+```bash
+~/.openclaw/api-throttle <service-name> -- <command>
+```
+
+Service names: `openrouter`, `telegram`, `github`, `google`, `generic` (for unlisted services).
+
+The throttle prevents bot detection and bans by adding human-like delays, enforcing burst limits, and backing off on errors. Check status with: `~/.openclaw/api-throttle --status`
+
+Never bypass the throttle. Never call external APIs directly without it.
+
 ## Red Lines
 
 - Never modify configurations — you are read-only except for audit/backup files

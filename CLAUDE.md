@@ -23,6 +23,10 @@ systemd/                # systemd timer + service unit files
 scripts/
   install.sh            # Deploy agents to ~/.openclaw/ and enable timers
   uninstall.sh          # Remove agents and disable timers
+  api-throttle.sh       # Human-like rate limiting for external API calls
+shared-data/
+  api-throttle/
+    config.json         # Per-service throttle configuration (delay ranges, burst limits)
 ```
 
 ## Development
@@ -31,6 +35,8 @@ scripts/
 - Edit schedules in `systemd/`
 - Run `scripts/install.sh` to deploy changes to the live OpenClaw installation
 - Auth files (`auth-profiles.json`) contain API keys — tracked in .gitignore template, kept locally
+- API throttle config in `shared-data/api-throttle/config.json` — tune delay ranges and burst limits per service
+- All agents MUST use `~/.openclaw/api-throttle <service> -- <command>` for external API calls
 
 ## Deployment Target
 
@@ -39,3 +45,5 @@ scripts/
 - Workspaces: `~/.openclaw/workspace-{id}/`
 - Timers: `~/.config/systemd/user/`
 - Shared data: `~/.openclaw/shared-data/`
+- API throttle: `~/.openclaw/shared-data/api-throttle/` (config, state, logs)
+- Throttle shortcut: `~/.openclaw/api-throttle` (symlink)
